@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sign Up</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f7f7f7;
+      }
+
+      h1 {
+        text-align: center;
+        margin-top: 50px;
+        margin-bottom: 30px;
+      }
+
+      form {
+        max-width: 500px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+      }
+
+      label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: bold;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        border: none;
+        background-color: #f7f7f7;
+        box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.1);
+      }
+
+      .password-container {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+      }
+
+      .password-container input[type="password"] {
+        margin-top: 10px;
+      }
+
+      .submit-container {
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      input[type="submit"] {
+        display: inline-block;
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: none;
+        background-color: #4caf50;
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+      }
+
+      input[type="submit"]:hover {
+        background-color: #3e8e41;
+      }
+
+      .error {
+        color: #ff0000;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Sign Up</h1>
+    <form action="/signup" method="post">
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" required />
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required />
+
+      <div class="password-container">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required />
+
+        <label for="confirm-password">Confirm Password</label>
+        <input
+          type="password"
+          id="confirm-password"
+          name="confirm-password"
+          required
+        />
+      </div>
+
+      <div class="submit-container">
+        <input type="submit" value="Sign Up" />
+      </div>
+    </form>
+    <script>
+      document.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirm-password').value;
+
+        if (password !== confirmPassword) {
+          alert('Passwords do not match');
+          return;
+        }
+        else if(password.length < 8){
+          alert('Password must be at least 8 characters long');
+          return;
+        }
+        else {
+          let data = {
+            name: name,
+            email: email,
+            password: password,
+          };
+          fetch('/signup', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.error) {
+                alert(data.error);
+              } else {
+                alert('Sign up successful');
+                window.location.href = '/login';
+              }
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+            })
+          }
+        })
+    </script>
+  </body>
+</html>
